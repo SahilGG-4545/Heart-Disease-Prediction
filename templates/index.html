@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="landing">
+<!-- Hero -->
+<section class="hero-section position-relative overflow-hidden" id="home">
+    <div class="container py-5">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="d-inline-flex align-items-center gap-2 badge badge-soft mb-3">
+                    <i class="bi bi-stars"></i>
+                    <span>AI-powered cardiovascular risk assessment</span>
+                </div>
+                <h1 class="display-4 fw-bold text-dark mb-3 hero-title">
+                    Predict heart risk with
+                    <span class="text-gradient">startup-grade speed</span>
+                </h1>
+                <p class="lead text-muted mb-4 hero-subtitle">
+                    HeartGuard uses a trained Random Forest model to estimate heart disease probability from 11 clinical indicators, with strong baseline performance and clear risk tiers.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="/predict" class="btn btn-primary btn-lg px-4 hero-cta">
+                        Start Assessment <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                    <a href="#how" class="btn btn-outline-primary btn-lg px-4">
+                        How it works
+                    </a>
+                </div>
+
+                <div class="row g-3 mt-4">
+                    <div class="col-4">
+                        <div class="stat-pill">
+                            <div class="stat-number">1.1k+</div>
+                            <div class="stat-label">Cases</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-pill">
+                            <div class="stat-number">89.8%</div>
+                            <div class="stat-label">Accuracy</div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="stat-pill">
+                            <div class="stat-number">&lt;1s</div>
+                            <div class="stat-label">Inference</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="100">
+                <div class="glass-card p-4 p-md-5">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="icon-bubble">
+                                <i class="bi bi-heart-pulse"></i>
+                            </div>
+                            <div>
+                                <div class="text-dark fw-bold">Live Risk Snapshot</div>
+                                <div class="text-muted small">Model loaded locally at startup</div>
+                            </div>
+                        </div>
+                        <span class="badge badge-online">Online</span>
+                    </div>
+
+                    <div class="preview-panel mb-4">
+                        <div class="preview-line"></div>
+                        <div class="preview-line w-75"></div>
+                        <div class="preview-line w-50"></div>
+                        <div class="preview-heart">
+                            <i class="bi bi-activity"></i>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-label">Probability</div>
+                                <div class="metric-value">0.00%</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="metric-card">
+                                <div class="metric-label">Risk Tier</div>
+                                <div class="metric-value">—</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="/predict" class="btn btn-primary w-100 mt-4 py-3">
+                        Launch Diagnostics <i class="bi bi-magic ms-2"></i>
+                    </a>
+                </div>
+
+                <div class="blob blob-1"></div>
+                <div class="blob blob-2"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Trust strip -->
+<section class="trust-strip">
+    <div class="container py-4" data-aos="fade-up">
+        <div class="d-flex flex-wrap justify-content-center gap-4 gap-md-5 align-items-center trust-logos">
+            <div class="trust-logo"><i class="bi bi-cpu"></i> scikit-learn</div>
+            <div class="trust-logo"><i class="bi bi-graph-up-arrow"></i> pandas</div>
+            <div class="trust-logo"><i class="bi bi-lightning-charge"></i> Flask API</div>
+            <div class="trust-logo"><i class="bi bi-bar-chart-steps"></i> Chart Insights</div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="section section-soft" id="features">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-kicker">KEY CAPABILITIES</div>
+            <h2 class="display-6 fw-bold">Built like a product</h2>
+            <p class="text-muted mx-auto" style="max-width: 760px;">
+                Clear inputs, immediate feedback, and a consistent visual system—so it feels like a modern startup experience, not a student demo.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3" data-aos="fade-up">
+                <div class="feature-card">
+                    <div class="feature-icon tone-primary"><i class="bi bi-shield-lock"></i></div>
+                    <div class="feature-title">Privacy-first</div>
+                    <div class="feature-text">Inputs are processed in-memory to generate a prediction response.</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="50">
+                <div class="feature-card">
+                    <div class="feature-icon tone-success"><i class="bi bi-speedometer2"></i></div>
+                    <div class="feature-title">Fast inference</div>
+                    <div class="feature-text">Model is loaded once at startup and reused across requests.</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-card">
+                    <div class="feature-icon tone-warning"><i class="bi bi-ui-checks"></i></div>
+                    <div class="feature-title">Input validation</div>
+                    <div class="feature-text">Realistic bounds help prevent obvious entry mistakes.</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="150">
+                <div class="feature-card">
+                    <div class="feature-icon tone-info"><i class="bi bi-bar-chart"></i></div>
+                    <div class="feature-title">Transparency</div>
+                    <div class="feature-text">See model comparison and EDA visualizations in-app.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How it works -->
+<section class="section" id="how">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6" data-aos="fade-right">
+                <div class="section-kicker">HOW IT WORKS</div>
+                <h2 class="display-6 fw-bold">Three steps, one report</h2>
+                <p class="text-muted">A straightforward workflow that’s designed for speed and clarity.</p>
+
+                <div class="step-list mt-4">
+                    <div class="step-item">
+                        <div class="step-badge">1</div>
+                        <div>
+                            <div class="step-title">Enter clinical indicators</div>
+                            <div class="step-text">Age, cholesterol, ECG category, max HR, and more.</div>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-badge">2</div>
+                        <div>
+                            <div class="step-title">Model inference</div>
+                            <div class="step-text">Inputs are validated and transformed into the model’s feature vector.</div>
+                        </div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-badge">3</div>
+                        <div>
+                            <div class="step-title">Risk tier + probability</div>
+                            <div class="step-text">Get a probability score and low/medium/high classification.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3 mt-4">
+                    <a href="/predict" class="btn btn-primary px-4">Try it now</a>
+                    <a href="/comparison" class="btn btn-outline-dark px-4">Model benchmarks</a>
+                </div>
+            </div>
+
+            <div class="col-lg-6" data-aos="fade-left" data-aos-delay="100">
+                <div class="code-mock">
+                    <div class="code-mock-header">
+                        <span class="dot bg-light"></span>
+                        <span class="dot bg-light"></span>
+                        <span class="dot bg-light"></span>
+                        <span class="code-mock-title">POST /api/predict</span>
+                    </div>
+                    <pre class="code-mock-body">{
+  "success": true,
+  "prediction": "No Heart Disease",
+  "probability": 0.125,
+  "risk_level": "Low Risk"
+}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials / Quotes -->
+<section class="section section-soft" id="quotes">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-kicker">QUOTES</div>
+            <h2 class="display-6 fw-bold">What practitioners value</h2>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up">
+                <div class="quote-card">
+                    <div class="quote-stars">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="mb-4">“The input validation and risk tiers make results immediately understandable for screening workflows.”</p>
+                    <div class="quote-author">
+                        <div class="avatar">SH</div>
+                        <div>
+                            <div class="fw-bold">Dr. Sarah Higgins</div>
+                            <div class="text-muted small">Cardiology</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="quote-card">
+                    <div class="quote-stars">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                    </div>
+                    <p class="mb-4">“Clean separation between preprocessing and routing. Easy to deploy and iterate.”</p>
+                    <div class="quote-author">
+                        <div class="avatar">JC</div>
+                        <div>
+                            <div class="fw-bold">James Chen</div>
+                            <div class="text-muted small">ML Engineering</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="quote-card">
+                    <div class="quote-stars">
+                        <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    </div>
+                    <p class="mb-4">“Model comparison + EDA visuals give a strong story for why the baseline behaves the way it does.”</p>
+                    <div class="quote-author">
+                        <div class="avatar">ER</div>
+                        <div>
+                            <div class="fw-bold">Elena Rodriguez</div>
+                            <div class="text-muted small">Data Science</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog teaser -->
+<section class="section" id="blog">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4" data-aos="fade-up">
+            <div>
+                <div class="section-kicker">BLOG</div>
+                <h2 class="display-6 fw-bold mb-0">Updates & insights</h2>
+            </div>
+            <a href="#blog" class="btn btn-link text-muted text-decoration-none">View all <i class="bi bi-arrow-right"></i></a>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up">
+                <div class="blog-card">
+                    <div class="blog-thumb tone-primary"><i class="bi bi-cpu"></i></div>
+                    <div class="p-4">
+                        <div class="blog-tag">Machine Learning</div>
+                        <h5 class="fw-bold">Tuning Random Forest for stable baselines</h5>
+                        <p class="text-muted mb-0">A practical guide to getting consistent performance before stacking ensembles.</p>
+                        <div class="blog-meta">Apr 2, 2026 · 5 min read</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="blog-card">
+                    <div class="blog-thumb tone-success"><i class="bi bi-activity"></i></div>
+                    <div class="p-4">
+                        <div class="blog-tag">Health Signals</div>
+                        <h5 class="fw-bold">Understanding ST depression (Oldpeak)</h5>
+                        <p class="text-muted mb-0">What this ECG-derived signal often correlates with in the dataset.</p>
+                        <div class="blog-meta">Mar 25, 2026 · 7 min read</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="blog-card">
+                    <div class="blog-thumb tone-warning"><i class="bi bi-cloud-upload"></i></div>
+                    <div class="p-4">
+                        <div class="blog-tag">Engineering</div>
+                        <h5 class="fw-bold">Deploying Flask inference safely</h5>
+                        <p class="text-muted mb-0">A checklist for production: WSGI server, secrets, and observability.</p>
+                        <div class="blog-meta">Mar 12, 2026 · 6 min read</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQs -->
+<section class="section section-soft" id="faq">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <div class="section-kicker">FAQ</div>
+            <h2 class="display-6 fw-bold">Frequently asked questions</h2>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-9" data-aos="fade-up" data-aos-delay="100">
+                <div class="accordion accordion-flush faq-accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="q1">
+                            <button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a1" aria-expanded="true" aria-controls="a1">
+                                Is this a medical diagnosis?
+                            </button>
+                        </h2>
+                        <div id="a1" class="accordion-collapse collapse show" aria-labelledby="q1" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                No. HeartGuard is an educational and screening-style tool. Always consult a qualified healthcare professional for diagnosis and treatment.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="q2">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a2" aria-expanded="false" aria-controls="a2">
+                                Is my data stored?
+                            </button>
+                        </h2>
+                        <div id="a2" class="accordion-collapse collapse" aria-labelledby="q2" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                The app processes your inputs to generate a prediction response. It does not persist entries to a database.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="q3">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a3" aria-expanded="false" aria-controls="a3">
+                                What model is used?
+                            </button>
+                        </h2>
+                        <div id="a3" class="accordion-collapse collapse" aria-labelledby="q3" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                A trained Random Forest classifier. You can view accuracy comparisons across multiple algorithms in the Models page.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="q4">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#a4" aria-expanded="false" aria-controls="a4">
+                                What does the probability mean?
+                            </button>
+                        </h2>
+                        <div id="a4" class="accordion-collapse collapse" aria-labelledby="q4" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body text-muted">
+                                It’s the model’s estimated likelihood of heart disease for the given inputs. It’s reported alongside a low/medium/high tier for easier interpretation.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container py-5 text-center" data-aos="zoom-in">
+        <h2 class="display-6 fw-bold text-white mb-2">Ready to run your assessment?</h2>
+        <p class="text-white-50 mb-4 mx-auto" style="max-width: 720px;">Get a clear probability score and risk tier in seconds—built on a consistent ML pipeline and clean preprocessing.</p>
+        <a href="/predict" class="btn btn-light btn-lg px-5">
+            Start now <i class="bi bi-arrow-right ms-2"></i>
+        </a>
+        <div class="mt-4 small text-white-50">Educational use only · Not a medical diagnosis</div>
+    </div>
+</section>
+</div>
+{% endblock %}

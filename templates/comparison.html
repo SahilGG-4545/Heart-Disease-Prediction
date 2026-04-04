@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header bg-white border-bottom">
+                    <h4 class="mb-0 text-dark"><i class="bi bi-bar-chart text-primary"></i> Model Comparison</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted mb-4">
+                        Cross-validation accuracy scores from 10-fold validation during model training phase.
+                    </p>
+
+                    <!-- Table View -->
+                    <div class="table-responsive mb-5">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Model Name</th>
+                                    <th class="text-end">Cross-Validation Accuracy</th>
+                                    <th class="text-end">Performance Bar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="modelTable">
+                                <!-- Will be populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Chart View -->
+                    <div class="mt-4">
+                        <h5 class="mb-3">Accuracy Visualization</h5>
+                        <canvas id="accuracyChart"></canvas>
+                    </div>
+
+                    <!-- Statistics -->
+                    <div class="row mt-5">
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 border-1 border rounded">
+                                <h6 class="text-muted">Best Performing Model</h6>
+                                <h4 id="bestModel" class="text-dark">-</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 border-1 border rounded">
+                                <h6 class="text-muted">Average Accuracy</h6>
+                                <h4 id="avgAccuracy" class="text-dark">-</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4 text-center">
+                            <div class="p-3 border-1 border rounded">
+                                <h6 class="text-muted">Models Tested</h6>
+                                <h4 id="modelCount" class="text-dark">-</h4>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="alert alert-info" role="alert">
+                        <strong><i class="bi bi-info-circle"></i> Selected Model:</strong><br>
+                        <strong>Random Forest (Gini criterion, 100 estimators)</strong> - Highest accuracy at 90.62%<br>
+                        This model is deployed for predictions in the web application.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Fetch comparison data
+fetch('/api/comparison-data')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const models = data.data.models;
+            const accuracy = data.data.accuracy;
+            
+            // Populate table
+            const tableBody = document.getElementById('modelTable');
+            models.forEach((model, index) => {
+                const acc = (accuracy[index] * 100).toFixed(2);
+                const row = `
+                    <tr>
+                        <td><strong>${model}</strong></td>
+                        <td class="text-end">${acc}%</td>
+                        <td class="text-end">
+                            <div class="progress" style="height: 20px; min-width: 100px;">
+                                <div class="progress-bar" style="width: ${acc}%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tableBody.innerHTML += row;
+            });
+            
+            // Calculate statistics
+            const maxAccuracy = Math.max(...accuracy);
+            const avgAccuracy = (accuracy.reduce((a, b) => a + b) / accuracy.length * 100).toFixed(2);
+            const bestModelIndex = accuracy.indexOf(maxAccuracy);
+            
+            document.getElementById('bestModel').textContent = models[bestModelIndex];
+            document.getElementById('avgAccuracy').textContent = avgAccuracy + '%';
+            document.getElementById('modelCount').textContent = models.length;
+            
+            // Create chart
+            const ctx = document.getElementById('accuracyChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: models,
+                    datasets: [{
+                        label: 'Cross-Validation Accuracy',
+                        data: accuracy.map(a => (a * 100).toFixed(2)),
+                        backgroundColor: models.map((_, i) => 
+                            i === bestModelIndex ? 'rgba(37, 99, 235, 0.85)' : 'rgba(37, 99, 235, 0.22)'
+                        ),
+                        borderColor: models.map((_, i) => 
+                            i === bestModelIndex ? 'rgba(29, 78, 216, 1)' : 'rgba(37, 99, 235, 0.45)'
+                        ),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    })
+    .catch(error => console.error('Error loading comparison data:', error));
+</script>
+{% endblock %}

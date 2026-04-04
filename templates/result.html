@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="py-5 mt-5">
+    <div class="container mb-5" id="result-container" style="display: none;">
+        
+        <div class="text-center mb-5">
+            <div class="badge px-3 py-2 rounded-pill mb-3 fw-medium risk-badge-low" id="result-badge">
+                <i class="bi bi-lightning-charge me-1"></i> Diagnostics Completed
+            </div>
+            <h1 class="display-4 fw-bold mb-3">Cardiovascular Analysis</h1>
+            <p class="lead text-muted" id="prediction-timestamp"></p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-lg rounded-4 h-100 overflow-hidden" data-aos="zoom-in">
+                    <div class="card-body p-5 text-center position-relative">
+                        <!-- Deco element -->
+                        <div class="position-absolute top-0 start-0 w-100 h-2 bg-gradient" id="card-top-accent"></div>
+                        
+                        <div class="mb-4 position-relative d-inline-block">
+                            <svg width="120" height="120" viewBox="0 0 120 120" id="donut-chart">
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="#f1f5f9" stroke-width="12" />
+                                <circle cx="60" cy="60" r="50" fill="none" stroke="#2563eb" stroke-width="12" stroke-dasharray="314" stroke-dashoffset="314" stroke-linecap="round" transform="rotate(-90 60 60)" class="progress-ring" id="percentage-ring" />
+                            </svg>
+                            <div class="position-absolute top-50 start-50 translate-middle text-center">
+                                <h2 class="fw-bold mb-0" id="prob-display">0%</h2>
+                            </div>
+                        </div>
+
+                        <h3 class="fw-bold mb-2" id="prediction-text">Loading...</h3>
+                        <p class="text-muted mb-4" id="risk-level-text">Assessing data...</p>
+
+                        <div class="p-3 rounded-3 mt-4 text-start small" id="insight-box">
+                            <i class="bi bi-info-circle me-1"></i> <span id="insight-text"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm rounded-4 h-100" data-aos="fade-left" data-aos-delay="100">
+                    <div class="card-header bg-white border-bottom p-4">
+                        <h5 class="fw-bold mb-0"><i class="bi bi-clipboard2-data text-dark me-2"></i> Clinical Parameters Submitted</h5>
+                    </div>
+                    <div class="card-body p-0 custom-scrollbar" style="max-height: 400px; overflow-y: auto;">
+                        <table class="table table-hover mb-0 align-middle">
+                            <tbody id="parameters-table">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer bg-light border-0 p-3 text-center">
+                        <a href="/predict" class="btn btn-outline-dark rounded-pill fw-medium px-4">
+                            <i class="bi bi-arrow-counterclockwise me-1"></i> Re-evaluate
+                        </a>
+                        <button class="btn btn-primary rounded-pill fw-medium px-4 ms-2" onclick="window.print()">
+                            <i class="bi bi-printer me-1"></i> Print Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="bg-light text-dark border border-start-0 border-end-0 border-bottom-0 border-top-2 p-4 rounded-3 d-flex align-items-center" data-aos="fade-up" data-aos-delay="200">
+                    <i class="bi bi-exclamation-triangle fs-3 text-dark me-3"></i>
+                    <div>
+                        <h6 class="fw-bold mb-1">Medical Disclaimer</h6>
+                        <small>HeartGuard prediction analytics are based purely on a statistical Random Forest matrix computed against synthetic and publicly structured datasets. It is not licensed by any health authority. Always consult your practicing physician prior to any medical decision.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container text-center pt-5" id="fallback-container">
+        <i class="bi bi-shield-x text-dark display-1 mb-3"></i>
+        <h2 class="fw-bold">No Context Found</h2>
+        <p class="text-muted max-w-md mx-auto mt-3 mb-4">It appears there is no patient analytical data temporarily stored in the session context. Please initiate a diagnostic workflow directly.</p>
+        <a href="/predict" class="btn btn-primary btn-lg rounded-pill px-5 shadow-sm">Commence Diagnostics <i class="bi bi-arrow-right ms-2"></i></a>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // App saves to predictionResult, old script was prediction_result. We use predictionResult
+        let storedResult = sessionStorage.getItem('predictionResult');
+        // fallback to old just in case
+        if (!storedResult) {
+            storedResult = sessionStorage.getItem('prediction_result');
+        }
+        
+        const resultContainer = document.getElementById('result-container');
+        const fallbackContainer = document.getElementById('fallback-container');
+        
+        if (!storedResult) {
+            fallbackContainer.style.display = 'block';
+            return;
+        }
+        
+        fallbackContainer.style.display = 'none';
+        resultContainer.style.display = 'block';
+        
+        try {
+            const data = JSON.parse(storedResult);
+            
+            // Set timestamp
+            const now = new Date();
+            document.getElementById('prediction-timestamp').textContent = `Report generated on ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
+            
+            // Handle visual UI updates mapping
+            const prob = Math.round(data.probability * 100);
+            
+            const isAtRisk = data.prediction === 'Heart Disease';
+            const riskColorVar = isAtRisk ? '#dc2626' : '#16a34a';
+            const riskTone = isAtRisk ? 'high' : 'low';
+            
+            document.getElementById('prediction-text').textContent = data.prediction;
+            document.getElementById('prediction-text').className = `fw-bold mb-2 risk-text-${riskTone}`;
+            document.getElementById('risk-level-text').innerHTML = `Algorithm Stratification: <strong>${data.risk_level}</strong>`;
+            
+            // Set insights
+            document.getElementById('insight-box').className = `p-3 rounded-3 mt-4 text-start small risk-box-${riskTone}`;
+            document.getElementById('insight-text').textContent = isAtRisk ? 
+                'The ensemble graph has identified correlations heavily mimicking patients diagnosed with cardiovascular concerns within the dataset baseline.' : 
+                'According to the parameters entered, the statistical profile corresponds highly to the control group indicating nominal cardiac patterns.';
+            
+            document.getElementById('result-badge').className = `badge risk-badge-${riskTone} px-3 py-2 rounded-pill mb-3 fw-medium`;
+            document.getElementById('card-top-accent').className = `position-absolute top-0 start-0 w-100 risk-accent-${riskTone}`;
+            document.getElementById('card-top-accent').style.height = '4px';
+
+            // Animate Ring
+            const ring = document.getElementById('percentage-ring');
+            ring.style.stroke = riskColorVar;
+            const circumference = 2 * Math.PI * 50; // 314
+            
+            // animate numbers and stroke
+            setTimeout(() => {
+                ring.style.transition = 'stroke-dashoffset 1.5s ease-out';
+                const strokeOffset = circumference - (prob / 100) * circumference;
+                ring.style.strokeDashoffset = strokeOffset;
+                
+                // Animate number
+                let i = 0;
+                const intvl = setInterval(() => {
+                    if (i >= prob) {
+                        clearInterval(intvl);
+                        document.getElementById('prob-display').textContent = `${prob}%`;
+                    } else {
+                        i++;
+                        document.getElementById('prob-display').textContent = `${i}%`;
+                    }
+                }, 1500 / (prob || 1));
+            }, 300);
+            
+            // Render Parameters Table
+            const tb = document.getElementById('parameters-table');
+            const mappings = {
+                'age': 'Age', 'sex': 'Sex', 'resting_bp': 'Resting BP', 'cholesterol': 'Cholesterol',
+                'fasting_blood_sugar': 'Fasting Blood Sugar', 'rest_ecg': 'Resting ECG',
+                'chest_pain_type': 'Chest Pain Type', 'max_heart_rate_achieved': 'Max HR',
+                'exercise_induced_angina': 'Exercise Angina', 'st_depression': 'ST Depression', 'st_slope': 'ST Slope'
+            };
+            
+            if (data.input_data) {
+                Object.keys(data.input_data).forEach(key => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 text-muted fw-medium border-0 border-bottom" style="width: 40%;">${mappings[key] || key}</td>
+                        <td class="py-3 px-4 fw-bold border-0 border-bottom text-end">${data.input_data[key]}</td>
+                    `;
+                    tb.appendChild(tr);
+                });
+            }
+
+        } catch (e) {
+            console.error('Failed parsing result data', e);
+            fallbackContainer.style.display = 'block';
+            resultContainer.style.display = 'none';
+        }
+    });
+</script>
+{% endblock %}

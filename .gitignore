@@ -1,0 +1,19 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+.ipynb_checkpoints/
+scripts/
+unused/
+DEPLOY.md
+main.py
+procfile
+PROJECT_SUMMARY.md
+QUICKSTART.md

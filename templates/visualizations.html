@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card">
+                <div class="card-header bg-white border-bottom">
+                    <h4 class="mb-0 text-dark"><i class="bi bi-graph-up text-primary"></i> Data Visualizations</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted mb-4">
+                        Exploratory Data Analysis (EDA) insights from the training dataset containing 1,173 patient records.
+                    </p>
+
+                    <!-- Age Distribution Info -->
+                    <div class="row mb-5">
+                        <div class="col-lg-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-person-check"></i> Age Distribution</h5>
+                                    <canvas id="ageChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-droplet"></i> Cholesterol Distribution</h5>
+                                    <canvas id="cholesterolChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heart Disease Distribution -->
+                    <div class="row mb-5">
+                        <div class="col-lg-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-heart-pulse"></i> Target Distribution</h5>
+                                    <canvas id="targetChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="bi bi-diagram-2"></i> Gender Distribution</h5>
+                                    <canvas id="genderChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Insights -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="alert alert-info">
+                                <strong><i class="bi bi-lightbulb"></i> Key Insight 1:</strong><br>
+                                Average age of patients is around 55 years. Risk increases significantly with age, particularly in patients over 50.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-info">
+                                <strong><i class="bi bi-lightbulb"></i> Key Insight 2:</strong><br>
+                                The dataset is fairly balanced with 629 heart disease patients and 561 normal patients, providing good model training data.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-warning">
+                                <strong><i class="bi bi-lightbulb"></i> Key Insight 3:</strong><br>
+                                Male patients account for a significantly higher percentage (approximately 70%) compared to female patients.
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-warning">
+                                <strong><i class="bi bi-lightbulb"></i> Key Insight 4:</strong><br>
+                                Cholesterol levels vary widely. Patients with elevated cholesterol levels show higher correlation with heart disease risk.
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Statistics -->
+                    <div class="row">
+                        <div class="col-md-3 text-center">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted">Total Records</h6>
+                                <h4 class="text-dark">1,173</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted">Disease Patients</h6>
+                                <h4 class="text-dark">629</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted">Healthy Patients</h6>
+                                <h4 class="text-dark">561</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="p-3 border rounded">
+                                <h6 class="text-muted">Features Analyzed</h6>
+                                <h4 class="text-dark">11</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Age Distribution Chart
+const ageCtx = document.getElementById('ageChart').getContext('2d');
+new Chart(ageCtx, {
+    type: 'line',
+    data: {
+        labels: ['20-30', '30-40', '40-50', '50-60', '60-70', '70-80'],
+        datasets: [{
+            label: 'Patient Count',
+            data: [35, 85, 150, 250, 420, 233],
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.10)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true,
+                position: 'top'
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Cholesterol Distribution Chart
+const cholesterolCtx = document.getElementById('cholesterolChart').getContext('2d');
+new Chart(cholesterolCtx, {
+    type: 'bar',
+    data: {
+        labels: ['<180', '180-200', '200-230', '230-260', '260-300', '>300'],
+        datasets: [{
+            label: 'Patient Count',
+            data: [250, 280, 320, 210, 85, 48],
+            backgroundColor: [
+                'rgba(8, 145, 178, 0.16)',
+                'rgba(8, 145, 178, 0.22)',
+                'rgba(8, 145, 178, 0.28)',
+                'rgba(8, 145, 178, 0.36)',
+                'rgba(8, 145, 178, 0.46)',
+                'rgba(8, 145, 178, 0.58)'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                display: true
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Target Distribution Chart
+const targetCtx = document.getElementById('targetChart').getContext('2d');
+new Chart(targetCtx, {
+    type: 'doughnut',
+    data: {
+        labels: ['No Disease', 'Heart Disease'],
+        datasets: [{
+            data: [561, 629],
+            backgroundColor: [
+                'rgba(22, 163, 74, 0.78)',
+                'rgba(220, 38, 38, 0.78)'
+            ],
+            borderColor: [
+                'rgba(21, 128, 61, 1)',
+                'rgba(185, 28, 28, 1)'
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+
+// Gender Distribution Chart
+const genderCtx = document.getElementById('genderChart').getContext('2d');
+new Chart(genderCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Male', 'Female'],
+        datasets: [{
+            data: [820, 353],
+            backgroundColor: [
+                'rgba(37, 99, 235, 0.78)',
+                'rgba(99, 102, 241, 0.55)'
+            ],
+            borderColor: [
+                'rgba(29, 78, 216, 1)',
+                'rgba(67, 56, 202, 0.85)'
+            ],
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-9 text-center" data-aos="fade-up">
+            <h1 class="display-6 fw-bold text-dark mb-2">Patient Assessment</h1>
+            <p class="text-muted mb-0">Enter the clinical indicators below to receive a probability score and risk tier.</p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9" data-aos="fade-up" data-aos-delay="100">
+            <div class="card overflow-hidden">
+                <div class="card-header form-card-header text-white">
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <h4 class="mb-0"><i class="bi bi-clipboard2-pulse"></i> Patient Information</h4>
+                        <span class="badge bg-light text-dark">All fields required</span>
+                    </div>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form id="predictionForm">
+                        <div class="row g-3">
+                            <!-- Age -->
+                            <div class="col-md-6">
+                                <label for="age" class="form-label">
+                                    <strong>Age</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                    <input type="number" class="form-control" id="age" name="age" min="1" max="120" step="1" placeholder="1-120" required>
+                                </div>
+                                <small class="text-muted">Range: 1-120 years</small>
+                            </div>
+
+                            <!-- Sex -->
+                            <div class="col-md-6">
+                                <label for="sex" class="form-label">
+                                    <strong>Sex</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-gender-ambiguous"></i></span>
+                                    <select class="form-select" id="sex" name="sex" required>
+                                        <option value="">Select sex</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Chest Pain Type -->
+                            <div class="col-md-6">
+                                <label for="chest_pain_type" class="form-label">
+                                    <strong>Chest Pain Type</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-emoji-frown"></i></span>
+                                    <select class="form-select" id="chest_pain_type" name="chest_pain_type" required>
+                                        <option value="">Select chest pain type</option>
+                                        <option value="typical_angina">Typical Angina</option>
+                                        <option value="atypical_angina">Atypical Angina</option>
+                                        <option value="non_anginal_pain">Non-Anginal Pain</option>
+                                        <option value="asymptomatic">Asymptomatic</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Cholesterol -->
+                            <div class="col-md-6">
+                                <label for="cholesterol" class="form-label">
+                                    <strong>Cholesterol (mg/dL)</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-droplet"></i></span>
+                                    <input type="number" class="form-control" id="cholesterol" name="cholesterol" min="0" max="600" step="0.1" placeholder="0-600" required>
+                                </div>
+                                <small class="text-muted">Range: 0-600 mg/dL</small>
+                            </div>
+
+                            <!-- Fasting Blood Sugar -->
+                            <div class="col-md-6">
+                                <label for="fasting_blood_sugar" class="form-label">
+                                    <strong>Fasting Blood Sugar &gt; 120 mg/dL</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-clipboard-data"></i></span>
+                                    <select class="form-select" id="fasting_blood_sugar" name="fasting_blood_sugar" required>
+                                        <option value="">Select</option>
+                                        <option value="0">No (0)</option>
+                                        <option value="1">Yes (1)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Rest ECG -->
+                            <div class="col-md-6">
+                                <label for="rest_ecg" class="form-label">
+                                    <strong>Rest ECG Type</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-activity"></i></span>
+                                    <select class="form-select" id="rest_ecg" name="rest_ecg" required>
+                                        <option value="">Select ECG type</option>
+                                        <option value="normal">Normal</option>
+                                        <option value="st_t_abnormality">ST-T Wave Abnormality</option>
+                                        <option value="left_vent_hypertrophy">Left Ventricular Hypertrophy</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Max Heart Rate -->
+                            <div class="col-md-6">
+                                <label for="max_heart_rate_achieved" class="form-label">
+                                    <strong>Maximum Heart Rate Achieved (bpm)</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-speedometer"></i></span>
+                                    <input type="number" class="form-control" id="max_heart_rate_achieved" name="max_heart_rate_achieved" min="60" max="220" step="1" placeholder="60-220" required>
+                                </div>
+                                <small class="text-muted">Range: 60-220 bpm</small>
+                            </div>
+
+                            <!-- Exercise Induced Angina -->
+                            <div class="col-md-6">
+                                <label for="exercise_induced_angina" class="form-label">
+                                    <strong>Exercise Induced Angina</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-lightning-charge"></i></span>
+                                    <select class="form-select" id="exercise_induced_angina" name="exercise_induced_angina" required>
+                                        <option value="">Select</option>
+                                        <option value="0">No (0)</option>
+                                        <option value="1">Yes (1)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- ST Depression -->
+                            <div class="col-md-6">
+                                <label for="st_depression" class="form-label">
+                                    <strong>Oldpeak (ST Depression) (mV)</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-graph-down"></i></span>
+                                    <input type="number" class="form-control" id="st_depression" name="st_depression" min="0" max="10" step="0.1" placeholder="0-10" required>
+                                </div>
+                                <small class="text-muted">Range: 0-10 mV</small>
+                            </div>
+
+                            <!-- ST Slope -->
+                            <div class="col-md-6">
+                                <label for="st_slope" class="form-label">
+                                    <strong>ST Slope</strong> <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-sliders"></i></span>
+                                    <select class="form-select" id="st_slope" name="st_slope" required>
+                                        <option value="">Select ST slope</option>
+                                        <option value="upsloping">Upsloping</option>
+                                        <option value="flat">Flat</option>
+                                        <option value="downsloping">Downsloping</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Error Alert -->
+                        <div id="errorAlert" class="alert alert-danger mt-4" role="alert" style="display: none;">
+                            <strong>Error:</strong> <span id="errorMessage"></span>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg py-3">
+                                <i class="bi bi-heart-pulse"></i> Get Prediction
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <div class="alert alert-info mb-0" role="alert">
+                        <small><strong>Note:</strong> All fields are required. All information is processed securely and not stored.</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div class="modal fade" id="loadingModal" tabindex="-1" backdrop="static" keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center p-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3">Analyzing patient data...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Clear previous errors
+    document.getElementById('errorAlert').style.display = 'none';
+    
+    // Collect form data
+    const formData = {
+        age: document.getElementById('age').value,
+        sex: document.getElementById('sex').value,
+        chest_pain_type: document.getElementById('chest_pain_type').value,
+        cholesterol: document.getElementById('cholesterol').value,
+        fasting_blood_sugar: document.getElementById('fasting_blood_sugar').value,
+        rest_ecg: document.getElementById('rest_ecg').value,
+        max_heart_rate_achieved: document.getElementById('max_heart_rate_achieved').value,
+        exercise_induced_angina: document.getElementById('exercise_induced_angina').value,
+        st_depression: document.getElementById('st_depression').value,
+        st_slope: document.getElementById('st_slope').value
+    };
+    
+    // Show loading modal
+    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+    loadingModal.show();
+    
+    try {
+        const response = await fetch('/api/predict', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const result = await response.json();
+        loadingModal.hide();
+        
+        if (result.success) {
+            // Store result in sessionStorage and redirect
+            sessionStorage.setItem('prediction_result', JSON.stringify(result));
+            window.location.href = '/result';
+        } else {
+            // Show error
+            document.getElementById('errorMessage').textContent = result.error;
+            document.getElementById('errorAlert').style.display = 'block';
+        }
+    } catch (error) {
+        loadingModal.hide();
+        document.getElementById('errorMessage').textContent = 'Network error. Please try again.';
+        document.getElementById('errorAlert').style.display = 'block';
+    }
+});
+</script>
+{% endblock %}
