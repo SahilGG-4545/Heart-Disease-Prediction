@@ -197,32 +197,16 @@ class ModelComparisonData:
         """Return cross-validation accuracy scores from training."""
         return {
             'models': [
-                'Random Forest (Gini)',
-                'Random Forest (Entropy)',
-                'Extra Trees (100)',
-                'Extra Trees (500)',
-                'XGBoost (100)',
-                'XGBoost (500)',
-                'XGBoost (1000)',
-                'XGBoost (2000)',
-                'Gradient Boosting',
-                'AdaBoost',
-                'Decision Tree',
-                'MLP Neural Network'
+                'Stacked Classifier',
+                'Random Forest',
+                'XGBoost',
+                'GBM'
             ],
             'accuracy': [
-                0.9062,
-                0.8991,
-                0.8897,
-                0.8886,
-                0.8875,
-                0.8991,
-                0.9041,
-                0.8856,
-                0.8975,
-                0.8821,
-                0.8723,
-                0.8852
+                0.8936,
+                0.8809,
+                0.8851,
+                0.8383
             ]
         }
 

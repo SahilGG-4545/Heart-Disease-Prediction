@@ -1,7 +1,7 @@
 
 # HeartGuard — Heart Disease Prediction (Flask + ML)
 
-HeartGuard is a production-style Flask web app that predicts heart disease risk from clinical inputs using a trained **RandomForestClassifier (Gini)**. It includes a clean web UI, a JSON API, model comparison charts, and EDA visualizations.
+HeartGuard is a production-style Flask web app that predicts heart disease risk from clinical inputs using a trained **StackingClassifier**. It includes a clean web UI, a JSON API, model comparison charts, and EDA visualizations.
 
 > Disclaimer: This project is for educational and informational purposes only and is **not** a medical device.
 
@@ -20,7 +20,7 @@ HeartGuard is a production-style Flask web app that predicts heart disease risk 
 ## Tech Stack
 
 - **Backend**: Flask
-- **ML**: scikit-learn (RandomForestClassifier, MinMaxScaler)
+- **ML**: scikit-learn (StackingClassifier, MinMaxScaler), XGBoost
 - **Frontend**: Bootstrap 5, Bootstrap Icons
 - **Charts**: Chart.js
 - **Artifacts**: `joblib` (`model.pkl`, `scaler.pkl`, `feature_info.pkl`)
@@ -151,9 +151,9 @@ Returns model metadata and feature lists.
 
 ## Model Details
 
-- **Algorithm**: Random Forest
-- **Criterion**: **Gini** (`criterion='gini'` in `train_model.py`)
-- **Estimators**: 100
+- **Algorithm**: Stacking Classifier
+- **Base Estimators**: Random Forest, XGBoost, Gradient Boosting
+- **Final Estimator**: XGBoost
 
 ## Troubleshooting
 

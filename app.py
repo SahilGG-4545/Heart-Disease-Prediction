@@ -173,10 +173,10 @@ def model_info():
             'success': True,
             'features': feature_info['feature_names'],
             'numeric_features': feature_info['numeric_features'],
-            'model_accuracy': 0.8979,
-            'model_precision': 0.8722,
+            'model_accuracy': 0.8936,
+            'model_precision': 0.8657,
             'model_recall': 0.9431,
-            'model_f1': 0.9062,
+            'model_f1': 0.9027,
             'models_comparison': comparison_data
         })
     except Exception as e:

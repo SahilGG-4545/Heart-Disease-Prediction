@@ -1,14 +1,15 @@
 """
-Script to train and save the Random Forest model for heart disease prediction.
+Script to train and save the Stacking model for heart disease prediction.
 This model will be used by the Flask application.
 """
 
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, StackingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import MinMaxScaler
 from scipy import stats
+from xgboost import XGBClassifier
 import joblib
 import warnings
 warnings.filterwarnings('ignore')
@@ -58,6 +59,13 @@ dt = pd.get_dummies(dt, drop_first=True)
 X = dt.drop(['target', 'resting_blood_pressure'], axis=1)
 y = dt['target']
 
+# Notebook-aligned feature selection
+rf_selector = RandomForestClassifier(n_estimators=100, criterion='entropy', random_state=42, n_jobs=-1)
+rf_selector.fit(X, y)
+feat_importance = pd.Series(rf_selector.feature_importances_, index=X.columns).sort_values(ascending=False)
+selected_features = feat_importance[feat_importance > 0.02].index.tolist()
+X = X[selected_features]
+
 print(f"Dataset shape: {X.shape}")
 print(f"Features: {X.columns.tolist()}")
 
@@ -68,18 +76,47 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 # Normalize numeric features
 scaler = MinMaxScaler()
-numeric_features = ['age', 'cholesterol', 'max_heart_rate_achieved', 'st_depression']
+numeric_features = [
+    col for col in ['age', 'cholesterol', 'max_heart_rate_achieved', 'st_depression']
+    if col in X.columns
+]
 X_train[numeric_features] = scaler.fit_transform(X_train[numeric_features])
 X_test[numeric_features] = scaler.transform(X_test[numeric_features])
 
-# Train Random Forest model (best performer)
-print("Training Random Forest model...")
-rf_model = RandomForestClassifier(criterion='gini', n_estimators=100, random_state=42, n_jobs=-1)
-rf_model.fit(X_train, y_train)
+# Train stacking model (best performer in updated notebook)
+print("Training Stacking model...")
+estimators = [
+    ('rf', RandomForestClassifier(
+        criterion='entropy', n_estimators=100, max_depth=10,
+        min_samples_split=5, random_state=42, n_jobs=-1
+    )),
+    ('xgb', XGBClassifier(
+        n_estimators=500, max_depth=3, learning_rate=0.1,
+        subsample=0.8, random_state=42
+    )),
+    ('gbm', GradientBoostingClassifier(
+        n_estimators=100, max_depth=3, max_features='sqrt',
+        min_samples_split=5, random_state=42
+    ))
+]
+
+model = StackingClassifier(
+    estimators=estimators,
+    final_estimator=XGBClassifier(
+        n_estimators=200,
+        max_depth=3,
+        learning_rate=0.05,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        random_state=42
+    ),
+    cv=5
+)
+model.fit(X_train, y_train)
 
 # Evaluate model
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score
-y_pred = rf_model.predict(X_test)
+y_pred = model.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 precision = precision_score(y_test, y_pred)
 recall = recall_score(y_test, y_pred)
@@ -95,7 +132,7 @@ print(f"ROC AUC:   {roc_auc:.4f}")
 
 # Save model and scaler
 print("\nSaving model and scaler...")
-joblib.dump(rf_model, 'model.pkl')
+joblib.dump(model, 'model.pkl')
 joblib.dump(scaler, 'scaler.pkl')
 
 # Save feature names and numeric features names for preprocessing
